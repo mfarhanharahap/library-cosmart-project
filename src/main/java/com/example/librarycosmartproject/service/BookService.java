@@ -31,36 +31,19 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class BookService {
     private final BookRepository bookRepository;
-    private final SubjectRepository subjectRepository;
-    private final AuthorRepository authorRepository;
-    private final BookAuthorRepository bookAuthorRepository;
+    private final SubjectService subjectService;
+    private final AuthorService authorService;
+    private final BookAuthorService bookAuthorService;
     private final Connection connection;
     private final ObjectMapper objectMapper;
     private final DateUtil dateUtil;
 
     public List<BookDTO> getListBooks(String subjectName) {
-        Subject subject = subjectRepository.findSubjectByName(subjectName)
-                .orElseGet(() -> addSubject(subjectName));
+        Subject subject = subjectService.getSubjectByName(subjectName);
         List<Book> listBooks = bookRepository.findAllBooksBySubjects(subject.getName())
                 .filter(books -> !books.isEmpty())
                 .orElseGet(() -> getListBooksFromWebsite(subjectName, subject));
        return convertToResponseList(listBooks);
-    }
-
-    private Subject addSubject(String subjectName) {
-        Subject subject = new Subject();
-        subject.setName(subjectName);
-        subject.setCreateDate(new Date());
-        subject.setUpdateDate(new Date());
-        return subjectRepository.save(subject);
-    }
-
-    private Author addAuthor(String authorName) {
-        Author author = new Author();
-        author.setName(authorName);
-        author.setCreateDate(new Date());
-        author.setUpdateDate(new Date());
-        return authorRepository.save(author);
     }
 
     private List<Book> getListBooksFromWebsite(String subjectName, Subject subject) {
@@ -101,14 +84,8 @@ public class BookService {
 
             List<AuthorDTO> authors = book.getAuthors();
             authors.forEach(author -> {
-                Author newAuthor = authorRepository.findAuthorByName(author.getName())
-                        .orElseGet(() -> addAuthor(author.getName()));
-                BookAuthor bookAuthor = new BookAuthor();
-                bookAuthor.setBook(newBook);
-                bookAuthor.setAuthor(newAuthor);
-                bookAuthor.setCreateDate(new Date());
-                bookAuthor.setUpdateDate(new Date());
-                bookAuthorRepository.save(bookAuthor);
+                Author newAuthor = authorService.getAuthorByName(author.getName());
+                bookAuthorService.saveBookAuthor(newBook, newAuthor);
             });
         });
         return listBooks;
@@ -117,11 +94,12 @@ public class BookService {
     private List<BookDTO> convertToResponseList(List<Book> list) {
         List<BookDTO> dtoList = new ArrayList<>();
         list.forEach(book -> {
-            List<String> authorList = authorRepository.findAuthorsNameByBookTitle(book.getTitle()).orElse(new ArrayList<>());
+            List<String> authorList = authorService.getListAuthorByBookTitle(book.getTitle());
             BookDTO bookDTO = new BookDTO();
             bookDTO.setTitle(book.getTitle());
             bookDTO.setId(book.getId());
             bookDTO.setAuthors(authorList);
+            bookDTO.setEdition(book.getEditionNumber());
             dtoList.add(bookDTO);
         });
         return dtoList;
