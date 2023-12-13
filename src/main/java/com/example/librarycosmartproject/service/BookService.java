@@ -80,7 +80,7 @@ public class BookService {
             newBook.setPublishYear(dateUtil.stringToDate(String.valueOf(book.getFirstPublishYear()), "yyyy"));
             newBook.setLastLoanDate(book.getAvailability().getLastLoanDate());
             newBook.setSubject(subject);
-            listBooks.add(bookRepository.save(newBook));
+            listBooks.add(saveBook(newBook));
 
             List<AuthorDTO> authors = book.getAuthors();
             authors.forEach(author -> {
@@ -103,5 +103,13 @@ public class BookService {
             dtoList.add(bookDTO);
         });
         return dtoList;
+    }
+
+    public Book findById(Integer id) {
+        return bookRepository.findById(id).orElse(new Book());
+    }
+
+    public Book saveBook(Book book) {
+        return bookRepository.save(book);
     }
 }

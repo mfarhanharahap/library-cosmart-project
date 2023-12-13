@@ -22,10 +22,10 @@ public class Ticket {
     private Book book;
 
     @Column(name = "start_loan_date")
-    private Date start_loan_date;
+    private Date startLoanDate;
 
     @Column(name = "expired_loan_date")
-    private Date expired_loan_date;
+    private Date expiredLoanDate;
 
     @Column(name = "create_date")
     private Date createDate;
