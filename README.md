@@ -24,10 +24,12 @@ docker compose up -- build -d
 ```
 curl --location 'http://localhost:8080/library/book/get-books?subjectName=love'
 ```
+![plot](./documentation/getAllBooks.png)
 - Book Schedule (with params bookId)
 ```
 curl --location --request POST 'http://localhost:8080/library/ticket/schedule?bookId=1'
 ```
+![plot](./documentation/schedulePickUp.png)
 4. To stop the application
 ```
 docker compose down
