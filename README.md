@@ -5,6 +5,16 @@
 ## Description
 The application was built on Spring Boot (as backend service) and PostgreSQL (as database service) with Docker Compose.
 
+## Prerequisite
+- Install docker. [Link download](https://docs.docker.com/desktop/) 
+
+Example in Mac Os
+```
+sudo hdiutil attach Docker.dmg
+sudo /Volumes/Docker/Docker.app/Contents/MacOS/install
+sudo hdiutil detach /Volumes/Docker
+```
+
 ## Local Setup
 1. Clone Repo
 ```
