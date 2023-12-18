@@ -25,10 +25,6 @@ git remote add origin https://github.com/mfarhanharahap/library-cosmart-project.
 ```
 docker compose up -- build -d
 ```
-2. To build and run use:
-```
-docker compose up -- build -d
-```
 3. Using the application:
 - Get All Books by Subject (example: love)
 ```
